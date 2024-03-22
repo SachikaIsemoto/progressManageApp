@@ -1,0 +1,81 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+
+  $(document).ready(function()
+  {
+    showLoader();
+    google.script.run.withSuccessHandler(getHolidayDataSuccess).getHolidayData();
+  });
+
+  function getHolidayDataSuccess(holidayData)
+  {
+    let youbi = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'holiday'];
+    for (let i = 0; i < holidayData.length; ++i)
+    {
+      if (holidayData[i][1] == "休")
+      {
+        document.getElementById(youbi[i]).checked = true;
+      }
+    }
+
+    hideLoader();
+  }
+
+  function setHolidayBtnClick()
+  {
+    showLoader();
+    $('#setHolidayModal').modal('hide');
+    let youbi = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'holiday'];
+    let data = [0, 0, 0, 0, 0, 0, 0, 0];
+
+    for (let i = 0; i < youbi.length; ++i)
+    {
+      if (document.getElementById(youbi[i]).checked == true)
+      {
+        data[i] = 1;
+      }
+    }
+    console.log(data);
+    google.script.run.withSuccessHandler(setHolidaySuccess).withFailureHandler(dataAddFail).setHoliday(data);
+
+  }
+
+  function setHolidaySuccess(e){
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessSetting).getAppUrl();
+
+  }
+
+  function getUrlSuccessSetting(url)
+  {
+    console.log("window_open");
+    window.open(url + '?p=setting', '_top');
+  }
+
+  function dataAddFail() {
+    hideLoader();
+    alert("登録に失敗しました。");  
+  }
+
+
+  function showLoader() {
+    console.log("showLoader");
+    $("#loader").fadeIn();
+    $("#modal").fadeIn();
+  }
+
+  function hideLoader() {
+    console.log("hideLoader");
+    $("#loader").fadeOut();
+    $("#modal").fadeOut();
+  }
+
+</script>

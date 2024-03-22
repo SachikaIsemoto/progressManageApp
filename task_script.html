@@ -1,0 +1,96 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  var projectData;
+  var selectID = document.getElementById('projectID');
+  selectID.addEventListener('change', selectProjectID);
+
+  $(document).ready(function()
+  {
+    showLoader();
+    google.script.run.withSuccessHandler(getProjectDataSuccess).getProjectData();
+  });
+
+  function getProjectDataSuccess(e)
+  {
+    console.log(e);
+    projectData = e;
+    hideLoader();
+  }
+
+  function selectProjectID()
+  {
+    const no = $(document.getElementById('projectID')).prop("selectedIndex");
+    console.log(no);
+    document.getElementById('projectName').textContent = projectData[no+1][1];
+  }
+
+  function addTaskBtnClick()
+  {
+    showLoader();
+    $('#addTaskModal').modal('hide');
+    const name = document.getElementById('taskName').value;
+    const id = document.getElementById('projectID').value;
+    const start = document.getElementById('startDate').value;
+    const end = document.getElementById('endDate').value;
+    const manager = document.getElementById('manager').value;
+    google.script.run.withSuccessHandler(dataAddTaskSuccess).withFailureHandler(dataAddFail).addTask(name, id, start, end, manager);
+  }
+
+  function dataAddTaskSuccess(e){
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessTask).getAppUrl();
+
+  }
+
+  function getUrlSuccessTask(url)
+  {
+    window.open(url + '?p=task', '_top');
+  }
+
+  function deleteTaskBtnClick()
+  {
+    showLoader();
+    $('#deleteTaskModal').modal('hide');
+    const id = document.getElementById('taskID').value;
+    google.script.run.withSuccessHandler(dataDeleteTaskSuccess).withFailureHandler(dataAddFail).deleteTask(id);
+  }
+
+  function dataDeleteTaskSuccess(e){
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessTask).getAppUrl();
+
+  }
+
+
+  function dataAddFail() {
+    hideLoader();
+    alert("登録に失敗しました。");  
+  }
+
+  function showLoader() {
+    console.log("showLoader");
+    $("#loader").fadeIn();
+    $("#modal").fadeIn();
+  }
+
+  function hideLoader() {
+    console.log("hideLoader");
+    $("#loader").fadeOut();
+    $("#modal").fadeOut();
+  }
+
+</script>

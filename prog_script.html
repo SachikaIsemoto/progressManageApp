@@ -1,0 +1,75 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  var taskData;
+  var selectID = document.getElementById('taskID');
+  selectID.addEventListener('change', selectTaskID);
+
+  $(document).ready(function()
+  {
+    showLoader();
+    google.script.run.withSuccessHandler(getTaskDataSuccess).getTaskData();
+  });
+
+  function getTaskDataSuccess(e)
+  {
+    console.log(e);
+    taskData = e;
+    hideLoader();
+  }
+
+  function selectTaskID()
+  {
+    const no = $(document.getElementById('taskID')).prop("selectedIndex");
+    console.log(no);
+    document.getElementById('taskName').textContent = taskData[no+1][1];
+  }
+
+  function updateProgressBtnClick()
+  {
+    showLoader();
+    $('#updateProgressModal').modal('hide');
+    const id = document.getElementById('taskID').value;
+    const percent = document.getElementById('percent').value;
+    const memo = document.getElementById('memo').value;
+    google.script.run.withSuccessHandler(dataUpdateProgressSuccess).withFailureHandler(dataAddFail).updateProgress(id, percent, memo);
+  }
+
+  function dataUpdateProgressSuccess(e)
+  {
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessProgress).getAppUrl();
+  }
+
+  function getUrlSuccessProgress(url)
+  {
+    window.open(url + '?p=progress', '_top');
+  }
+
+
+  function dataAddFail() {
+    hideLoader();
+    alert("登録に失敗しました。");  
+  }
+
+
+  function showLoader() {
+    console.log("showLoader");
+    $("#loader").fadeIn();
+    $("#modal").fadeIn();
+  }
+
+  function hideLoader() {
+    console.log("hideLoader");
+    $("#loader").fadeOut();
+    $("#modal").fadeOut();
+  }
+
+</script>

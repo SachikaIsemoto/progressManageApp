@@ -1,0 +1,72 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+
+  function addProjectBtnClick(){
+    showLoader();
+    $('#addProjectModal').modal('hide');
+    const name = document.getElementById('projectName').value;
+    const start = document.getElementById('startDate').value;
+    const end = document.getElementById('endDate').value;
+    google.script.run.withSuccessHandler(dataAddProjectSuccess).withFailureHandler(dataAddFail).addProject(name, start, end);
+  }
+
+  function dataAddProjectSuccess(e){
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessProject).getAppUrl();
+
+  }
+
+  function getUrlSuccessProject(url)
+  {
+    console.log("window_open");
+    window.open(url + '?p=project', '_top');
+  }
+
+  function dataAddFail() {
+    hideLoader();
+    alert("登録に失敗しました。");  
+  }
+
+  function deleteProjectBtnClick(){
+    showLoader();
+    $('#deleteProjectModal').modal('hide');
+    const id = document.getElementById('projectID').value;
+    google.script.run.withSuccessHandler(dataDeleteProjectSuccess).withFailureHandler(dataAddFail).deleteProject(id);
+  }
+
+  function dataDeleteProjectSuccess(e){
+    hideLoader();
+    if (e != 0)
+    {
+      alert(e);
+      return;
+    }
+    
+    google.script.run.withSuccessHandler(getUrlSuccessProject).getAppUrl();
+
+  }
+
+
+  
+
+  function showLoader() {
+    console.log("showLoader");
+    $("#loader").fadeIn();
+    $("#modal").fadeIn();
+  }
+
+  function hideLoader() {
+    console.log("hideLoader");
+    $("#loader").fadeOut();
+    $("#modal").fadeOut();
+  }
+
+</script>

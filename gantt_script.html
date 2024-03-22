@@ -1,0 +1,133 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script>
+  var gantchartAllData;
+  var gantchartData;
+  google.charts.load('current', {'packages':['gantt']});
+
+  function daysToMilliseconds(days) {
+    return days * 24 * 60 * 60 * 1000;
+  }
+
+  $(document).ready(function()
+  {
+    showLoader();
+    google.script.run.withSuccessHandler(setGanttData).withFailureHandler().getSavedData();
+  });
+
+  function ganttShowButton()
+  {
+    showLoader();
+    const id = document.getElementById('projectID').value;
+    google.script.run.withSuccessHandler(ganttchartShow).withFailureHandler(dataAddFail).getProjectRow(id);
+  }
+
+  function dataAddFail() {
+    hideLoader();
+    alert("登録に失敗しました。");  
+  }
+
+  function ganttchartShow(e)
+  {
+    if (e == -1)
+    {
+      hideLoader();
+      alert("データの取得に失敗しました。");
+      return;
+    }
+    gantchartData = gantchartAllData[e - 1];
+    if (gantchartData.length == 1)
+    {
+      hideLoader();
+      alert("タスクの登録がありません。");
+      return;
+    }
+    drawChart();
+  }
+
+  function setGanttData(e)
+  {
+    gantchartAllData = e;
+    console.log(e);
+    console.log(gantchartAllData);
+    hideLoader();
+  }
+
+  function drawChart() { 
+    
+    console.log(gantchartData);
+    var data = new google.visualization.DataTable();
+    data.addColumn('string', 'Task ID');
+    data.addColumn('string', 'Task Name');
+    data.addColumn('string', 'Resorce');
+    data.addColumn('date', 'Start Date');
+    data.addColumn('date', 'End Date');
+    data.addColumn('number', 'Duration');
+    data.addColumn('number', 'Percent Complete');
+    data.addColumn('string', 'Dependencies');
+
+    for (let i = 1; i < gantchartData.length; i++)
+    {
+      let item = gantchartData[i];
+      var tempArray = [];
+      
+      tempArray.push(String(item[0]));
+      tempArray.push(String(item[1]));
+      tempArray.push(String(item[2]));
+        
+      if(item[3] == ""){
+        tempArray.push(null);
+      }else{
+        tempArray.push(new Date(item[3]));
+      }
+        
+      if(item[4] == ""){
+        tempArray.push(null);
+      }else{
+        tempArray.push(new Date(item[4]));
+      }
+        
+      if(item[5] == ""){
+        tempArray.push(null);
+      }else{
+        tempArray.push(Number(daysToMilliseconds(item[5])));
+      }
+
+      tempArray.push(Number(item[6]));
+        
+      if(item[7] == ""){
+        tempArray.push(null);
+      }else{
+        tempArray.push(String(item[7]));
+      }
+ 
+      data.addRow(tempArray);
+    }
+
+    var height = (gantchartData.length + 1) * 42;
+           
+    var options = {
+      height: height
+    };
+        
+    // create Gantt Chart
+    var chart = new google.visualization.Gantt(document.getElementById("chart_div"));
+ 
+    chart.draw(data, options);
+    hideLoader();
+  }
+
+  function showLoader() {
+    console.log("showLoader");
+    $("#loader").fadeIn();
+    $("#modal").fadeIn();
+  }
+
+  function hideLoader() {
+    console.log("hideLoader");
+    $("#loader").fadeOut();
+    $("#modal").fadeOut();
+  }
+
+</script>
