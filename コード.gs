@@ -1,50 +1,45 @@
-let notStartedYet = "未着手";
-let workInProgress = "進行中";
-let completed = "完了";
-let scheduleImageFileID = '1Mqwjxosxb5N1bxfzpph3gITe3OuXYdGp';
-let scheduleImageUrl = 'https://drive.google.com/uc?id=' + scheduleImageFileID;
-let progressImageFileID = '1IoRE5gz4oz8hRH9-lPgRazyAMOUri-ut';
-let progerssImageUrl = 'https://drive.google.com/uc?id=' + progressImageFileID;
-let gantchartPixel = 20.78;
+const notStartedYet = "未着手";
+const workInProgress = "進行中";
+const completed = "完了";
 
-let sheetID = '1kGihsMZ7RjzDtbCRPy-Trk7tKe3RL9m1tjHd9Wmppcg';
+const sheetID = '1kGihsMZ7RjzDtbCRPy-Trk7tKe3RL9m1tjHd9Wmppcg';
 
 
 function doGet(e) {
-  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
 
-  let page = (e.parameter.p || "index");
-  let template = HtmlService.createTemplateFromFile(page);
+  const page = (e.parameter.p || "index");
+  const template = HtmlService.createTemplateFromFile(page);
 
   if (page == "project")
   {
-    let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+    const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
     template.data = projectSheet.getDataRange().getValues();
   }
   else if(page == "task")
   {
-    let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+    const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
     template.projectData = projectSheet.getDataRange().getValues();
     
-    let taskSheet = spreadsheet.getSheetByName("タスク一覧");
+    const taskSheet = spreadsheet.getSheetByName("タスク一覧");
     template.taskData = taskSheet.getDataRange().getValues();
   }
   else if (page == "progress")
   {
-    let taskSheet = spreadsheet.getSheetByName("タスク一覧");
+    const taskSheet = spreadsheet.getSheetByName("タスク一覧");
     template.taskData = taskSheet.getDataRange().getValues();
 
-    let progressSheet = spreadsheet.getSheetByName("進捗状況");
+    const progressSheet = spreadsheet.getSheetByName("進捗状況");
     template.progressData = progressSheet.getDataRange().getValues();
   }
   else if (page == "gantchart")
   {
-    let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+    const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
     template.projectData = projectSheet.getDataRange().getValues();
   }
   else if (page == "setting")
   {
-    let holidaySheet = spreadsheet.getSheetByName("定休日");
+    const holidaySheet = spreadsheet.getSheetByName("定休日");
     template.holidayData = holidaySheet.getDataRange().getValues();
   }  
 
@@ -53,8 +48,8 @@ function doGet(e) {
 
 function getTaskData()
 {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
-  let taskData = spreadsheet.getSheetByName("タスク一覧").getDataRange().getValues();
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
+  const taskData = spreadsheet.getSheetByName("タスク一覧").getDataRange().getValues();
   
   for (let i = 1; i < taskData.length; ++i)
   {
@@ -67,8 +62,8 @@ function getTaskData()
 
 function getProjectData()
 {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
-  let projectData = spreadsheet.getSheetByName("プロジェクト一覧").getDataRange().getValues();
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
+  const projectData = spreadsheet.getSheetByName("プロジェクト一覧").getDataRange().getValues();
   
   for (let i = 1; i < projectData.length; ++i)
   {
@@ -81,8 +76,8 @@ function getProjectData()
 
 function getHolidayData()
 {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
-  let holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
+  const holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
   
   return holidayData;
 }
@@ -92,20 +87,20 @@ function getAppUrl() {
 }
 
 function getSavedData() {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let data = new Array();
+  const data = new Array();
 
   for (let i = 1; i < projectData.length; ++i)
   {
-    let projectID = projectData[i][0];
-    let projectName = projectData[i][1];
-    let sheetname = projectID + "_" + projectName + "_ガントチャート";
-    let gantchartSheet = spreadsheet.getSheetByName(sheetname);
-    let gantchartData = gantchartSheet.getDataRange().getValues();
+    const projectID = projectData[i][0];
+    const projectName = projectData[i][1];
+    const sheetname = projectID + "_" + projectName + "_ガントチャート";
+    const gantchartSheet = spreadsheet.getSheetByName(sheetname);
+    const gantchartData = gantchartSheet.getDataRange().getValues();
 
     for (let j = 1; j < gantchartData.length; ++j)
     {
@@ -123,10 +118,10 @@ function getSavedData() {
 
 function getProjectRow(id)
 {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
   for (let i = 1; i < projectData.length; ++i)
   {
@@ -142,13 +137,12 @@ function getProjectRow(id)
 
 function addProject(name, start_date, end_date) {
   
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let errorTitle = "エラー";
-  let errorMessage;
+  let errorMessage = "";
 
   console.log(name);
   console.log(start_date);
@@ -162,9 +156,9 @@ function addProject(name, start_date, end_date) {
   }
 
   let projectID;
-  let projectName = name;
-  let startDate = new Date(start_date);
-  let endDate = new Date(end_date);
+  const projectName = name;
+  const startDate = new Date(start_date);
+  const endDate = new Date(end_date);
 
   console.log(startDate.toDateString());
   console.log(endDate.toDateString());
@@ -190,20 +184,20 @@ function addProject(name, start_date, end_date) {
   /* 日数の計算 */
 
   let days = 0;
-  let holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
-  let calendarId = "ja.japanese#holiday@group.v.calendar.google.com";
-  let calendar = CalendarApp.getCalendarById(calendarId);
+  const holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
+  const calendarId = "ja.japanese#holiday@group.v.calendar.google.com";
+  const calendar = CalendarApp.getCalendarById(calendarId);
 
   for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1))
   {
-    let youbi = i.getDay();
+    const youbi = i.getDay();
     if (holidayData[youbi][1] == "休")
     {
       continue;
     }
     if (holidayData[7][1] == "休")
     {
-      let event = calendar.getEventsForDay(i);
+      const event = calendar.getEventsForDay(i);
       if (event.length > 0)
       {
         continue;
@@ -221,24 +215,23 @@ function addProject(name, start_date, end_date) {
   projectSheet.getRange(projectData.length + 1, 6).setValue(notStartedYet);
 
   /* ガントチャート作成 */
-  let gantchartSheet = spreadsheet.getSheetByName("ガントチャートテンプレート").copyTo(spreadsheet);
-  let sheetname = projectID + "_" + projectName + "_ガントチャート";
+  const gantchartSheet = spreadsheet.getSheetByName("ガントチャートテンプレート").copyTo(spreadsheet);
+  const sheetname = projectID + "_" + projectName + "_ガントチャート";
   gantchartSheet.setName(sheetname);
 
   return 0;
 }
 
 function addTask(name, id, start_day, end_day, man) {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let taskSheet = spreadsheet.getSheetByName("タスク一覧");
-  let taskData = taskSheet.getDataRange().getValues();
+  const taskSheet = spreadsheet.getSheetByName("タスク一覧");
+  const taskData = taskSheet.getDataRange().getValues();
 
-  let errorTitle = "エラー";
-  let errorMessage;
+  let errorMessage = "";
 
   /* データの確認 */
   if ((name == "") || (id == "") || (start_day == "") || (end_day == "") || (man == ""))
@@ -248,11 +241,11 @@ function addTask(name, id, start_day, end_day, man) {
   }
 
   let taskID;
-  let taskName = name;
-  let projectID = id;
-  let startDate = new Date(start_day);
-  let endDate = new Date(end_day);
-  let manager = man;
+  const taskName = name;
+  const projectID = id;
+  const startDate = new Date(start_day);
+  const endDate = new Date(end_day);
+  const manager = man;
 
   /* IDの割り当て */
   if (taskData.length == 1)
@@ -265,7 +258,7 @@ function addTask(name, id, start_day, end_day, man) {
   }
 
   /* プロジェクトIDチェック */
-  let projectRow;
+  let projectRow = 1;
   for (projectRow = 1; projectRow < projectData.length; ++projectRow)
   {
     if (projectData[projectRow][0] == projectID)
@@ -295,20 +288,20 @@ function addTask(name, id, start_day, end_day, man) {
 
   /* 日数の計算 */
   let days = 0;
-  let holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
-  let calendarId = "ja.japanese#holiday@group.v.calendar.google.com";
-  let calendar = CalendarApp.getCalendarById(calendarId);
+  const holidayData = spreadsheet.getSheetByName("定休日").getDataRange().getValues();
+  const calendarId = "ja.japanese#holiday@group.v.calendar.google.com";
+  const calendar = CalendarApp.getCalendarById(calendarId);
 
   for (let i = new Date(startDate); i <= endDate; i.setDate(i.getDate() + 1))
   {
-    let youbi = i.getDay();
+    const youbi = i.getDay();
     if (holidayData[youbi][1] == "休")
     {
       continue;
     }
     if (holidayData[7][1] == "休")
     {
-      let event = calendar.getEventsForDay(i);
+      const event = calendar.getEventsForDay(i);
       if (event.length > 0)
       {
         continue;
@@ -329,10 +322,10 @@ function addTask(name, id, start_day, end_day, man) {
   taskSheet.getRange(taskData.length + 1, 9).setValue(notStartedYet);
 
   /* ガントチャート更新 */
-  let gantchartName = projectID + "_" + projectData[projectRow][1] + "_ガントチャート";
-  let gantchartSheet = spreadsheet.getSheetByName(gantchartName);
-  let gantchartData = gantchartSheet.getDataRange().getValues();
-  let gantchartRow = gantchartData.length + 1;
+  const gantchartName = projectID + "_" + projectData[projectRow][1] + "_ガントチャート";
+  const gantchartSheet = spreadsheet.getSheetByName(gantchartName);
+  const gantchartData = gantchartSheet.getDataRange().getValues();
+  const gantchartRow = gantchartData.length + 1;
 
   gantchartSheet.getRange(gantchartRow, 1).setValue(taskID);
   gantchartSheet.getRange(gantchartRow, 2).setValue(taskName);
@@ -347,19 +340,18 @@ function addTask(name, id, start_day, end_day, man) {
 }
 
 function updateProgress(id, percent, memo_input) {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let taskSheet = spreadsheet.getSheetByName("タスク一覧");
-  let taskData = taskSheet.getDataRange().getValues();
+  const taskSheet = spreadsheet.getSheetByName("タスク一覧");
+  const taskData = taskSheet.getDataRange().getValues();
 
-  let progressSheet = spreadsheet.getSheetByName("進捗状況");
-  let progressData = progressSheet.getDataRange().getValues();
+  const progressSheet = spreadsheet.getSheetByName("進捗状況");
+  const progressData = progressSheet.getDataRange().getValues();
 
-  let errorTitle = "エラー";
-  let errorMessage;
+  let errorMessage = "";
 
   /* データの確認 */
   if ((id == "") || (percent == ""))
@@ -368,9 +360,9 @@ function updateProgress(id, percent, memo_input) {
     return errorMessage;
   }
 
-  let taskID = id;
-  let progress = percent;
-  let memo = memo_input;
+  const taskID = id;
+  const progress = percent;
+  const memo = memo_input;
 
   if ((0 > progress) || (100 < progress))
   {
@@ -442,7 +434,7 @@ function updateProgress(id, percent, memo_input) {
       }
     }
   }
-  let projectRow;
+  let projectRow = 1;
   for (i = 1; i < projectData.length; ++i)
   {
     if (projectData[i][0] == projectID)
@@ -465,7 +457,7 @@ function updateProgress(id, percent, memo_input) {
   }
 
   /* 進捗状況シートに記録 */
-  let today = new Date;
+  const today = new Date;
   for (i = 1; i < progressData.length; ++i)
   {
     if (taskID == progressData[i][1])
@@ -491,9 +483,9 @@ function updateProgress(id, percent, memo_input) {
 
 
   /* ガントチャートを更新 */
-  let gantchartName = projectID + "_" + projectData[projectRow][1] + "_ガントチャート";
-  let gantchartSheet = spreadsheet.getSheetByName(gantchartName);
-  let gantchartData = gantchartSheet.getDataRange().getValues();
+  const gantchartName = projectID + "_" + projectData[projectRow][1] + "_ガントチャート";
+  const gantchartSheet = spreadsheet.getSheetByName(gantchartName);
+  const gantchartData = gantchartSheet.getDataRange().getValues();
   let gantchartRow;
   for (i = 1; i < gantchartData.length; ++i)
   {
@@ -511,19 +503,18 @@ function updateProgress(id, percent, memo_input) {
 }
 
 function deleteProject(id) {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let taskSheet = spreadsheet.getSheetByName("タスク一覧");
-  let taskData = taskSheet.getDataRange().getValues();
+  const taskSheet = spreadsheet.getSheetByName("タスク一覧");
+  const taskData = taskSheet.getDataRange().getValues();
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let progressSheet = spreadsheet.getSheetByName("進捗状況");
-  let progressData = progressSheet.getDataRange().getValues();
+  const progressSheet = spreadsheet.getSheetByName("進捗状況");
+  const progressData = progressSheet.getDataRange().getValues();
 
-  let errorTitle = "エラー";
-  let errorMessage;
+  let errorMessage = "";
 
   /* データの確認 */
   if (id == "")
@@ -532,7 +523,7 @@ function deleteProject(id) {
     return errorMessage;
   }
 
-  let projectID = id;
+  const projectID = id;
   let projectRow, i;
   for (i = 1; i < projectData.length; ++i)
   {
@@ -574,27 +565,26 @@ function deleteProject(id) {
   }
 
   /* ガントチャート更新 */
-  let gantchartName = projectData[projectRow][0] + "_" + projectData[projectRow][1] + "_ガントチャート";
-  let gantchartSheet = spreadsheet.getSheetByName(gantchartName);
+  const gantchartName = projectData[projectRow][0] + "_" + projectData[projectRow][1] + "_ガントチャート";
+  const gantchartSheet = spreadsheet.getSheetByName(gantchartName);
   spreadsheet.deleteSheet(gantchartSheet);
 
   return 0;
 }
 
 function deleteTask(id) {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let taskSheet = spreadsheet.getSheetByName("タスク一覧");
-  let taskData = taskSheet.getDataRange().getValues();
+  const taskSheet = spreadsheet.getSheetByName("タスク一覧");
+  const taskData = taskSheet.getDataRange().getValues();
 
-  let projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
-  let projectData = projectSheet.getDataRange().getValues();
+  const projectSheet = spreadsheet.getSheetByName("プロジェクト一覧");
+  const projectData = projectSheet.getDataRange().getValues();
 
-  let progressSheet = spreadsheet.getSheetByName("進捗状況");
-  let progressData = progressSheet.getDataRange().getValues();
+  const progressSheet = spreadsheet.getSheetByName("進捗状況");
+  const progressData = progressSheet.getDataRange().getValues();
 
-  let errorTitle = "エラー";
-  let errorMessage;
+  let errorMessage = "";
 
   /* データの確認 */
   if (id == "")
@@ -603,7 +593,7 @@ function deleteTask(id) {
     return errorMessage;
   }
 
-  let taskID = id;
+  const taskID = id;
   let i, taskRow;
   for (i = 1; i < taskData.length; ++i)
   {
@@ -653,9 +643,9 @@ function deleteTask(id) {
   }
 
   /* ガントチャート更新 */
-  let gantchartName = projectData[projectRow][0] + "_" + projectData[projectRow][1] + "_ガントチャート";
-  let gantchartSheet = spreadsheet.getSheetByName(gantchartName);
-  let gantchartData = gantchartSheet.getDataRange().getValues();
+  const gantchartName = projectData[projectRow][0] + "_" + projectData[projectRow][1] + "_ガントチャート";
+  const gantchartSheet = spreadsheet.getSheetByName(gantchartName);
+  const gantchartData = gantchartSheet.getDataRange().getValues();
   let gantchartRow;
   for (i = 1; i < gantchartData.length; ++i)
   {
@@ -673,9 +663,9 @@ function deleteTask(id) {
 
 function setHoliday(data)
 {
-  let spreadsheet = SpreadsheetApp.openById(sheetID);
+  const spreadsheet = SpreadsheetApp.openById(sheetID);
 
-  let holidaySheet = spreadsheet.getSheetByName("定休日");
+  const holidaySheet = spreadsheet.getSheetByName("定休日");
 
   for (let i = 0; i < data.length; ++i)
   {
@@ -692,46 +682,9 @@ function setHoliday(data)
   return 0;
 }
 
-/*
-function aleartTask() {
-  let spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
-  spreadsheet.setSpreadsheetTimeZone("Asia/Tokyo");
-
-  let taskSheet = spreadsheet.getSheetByName("タスク一覧");
-  let taskData = taskSheet.getDataRange().getValues();
-
-  let addressSheet = spreadsheet.getSheetByName("連絡先");
-  let addressData = addressSheet.getDataRange().getValues();
-
-  let i, j;
-  let today = new Date;
-  for (i = 1; i < taskData.length; ++i)
-  {
-    if ((taskData[i][7] != completed) && areDatesEqual(taskData[i][4], today))
-    {
-      // メール送信
-      for (j = 1; j < addressData.length; ++j)
-      {
-        if (taskData[i][6] == addressData[j][0])
-        {
-          let mail = addressData[j][1];
-          let title = "進捗アラート";
-          let body = taskData[i][6] + "様\n\n"
-                    + "タスク「" + taskData[i][2] + "」の期限が本日となっています。\n"
-                    + "進捗入力がまだの場合は入力をお願いいたします。\n\n"
-                    + "以上\n\n" + "進捗管理係";
-
-          GmailApp.sendEmail(mail, title, body);
-          break;
-        }
-      }
-    }
-  }
-}
-*/
 
 function convertDayIndexToName(dayIndex) {
-  let daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
+  const daysOfWeek = ['日', '月', '火', '水', '木', '金', '土'];
   return daysOfWeek[dayIndex];
 }
 
